@@ -31,7 +31,7 @@ int main()
         }
     }
 
-    for (int i = 0; i < count_word; i++)
+    for (int i = 1; i < count_word; i+=2)
     {
         cout << "Слово " << i + 1 << ": " << words[i] << endl;
     }
