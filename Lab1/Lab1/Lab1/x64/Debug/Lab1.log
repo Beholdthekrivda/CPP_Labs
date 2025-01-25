@@ -1,3 +1,0 @@
-﻿  Lab_1.cpp
-C:\Users\Bruh263\Desktop\CPP_Labs\Lab1\Lab_1.cpp(17,8): warning C4804: <=: небезопасное использование типа "bool" в операции
-  Lab1.vcxproj -> C:\Users\Bruh263\Desktop\CPP_Labs\Lab1\Lab1\x64\Debug\Lab1.exe
