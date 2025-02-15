@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Bruh263\\Desktop\\CPP_Labs\\Lab3\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{94CC2343-592F-460E-9958-7BDDC317F3A2}|Lab3\\Lab3.vcxproj|C:\\Users\\Bruh263\\Desktop\\CPP_Labs\\Lab3\\Lab3\\Lab3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{94CC2343-592F-460E-9958-7BDDC317F3A2}|Lab3\\Lab3.vcxproj|solutionrelative:Lab3\\Lab3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Lab3.cpp",
+              "DocumentMoniker": "C:\\Users\\Bruh263\\Desktop\\CPP_Labs\\Lab3\\Lab3\\Lab3.cpp",
+              "RelativeDocumentMoniker": "Lab3\\Lab3.cpp",
+              "ToolTip": "C:\\Users\\Bruh263\\Desktop\\CPP_Labs\\Lab3\\Lab3\\Lab3.cpp",
+              "RelativeToolTip": "Lab3\\Lab3.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-01-25T06:46:14.318Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
