@@ -1,0 +1,10 @@
+# Папки сборки
+Debug/
+Release/
+x64/
+.vs/
+*.vcxproj.user
+*.sdf
+*.pdb
+*.ilk
+*.obj
