@@ -3,7 +3,7 @@
 using namespace std;
 
 const int len_nums = 18;
-//
+//123123
 void create(int count, int arr[])
 {
 	for (int i = 0; i < count; i++)
