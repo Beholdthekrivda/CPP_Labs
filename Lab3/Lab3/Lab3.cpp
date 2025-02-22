@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -7,7 +8,7 @@ int main()
     //setlocale(LC_ALL, "RU");
 
     int count_word;
-    char words[20][10];
+    char words[20][11];
 
     cout << "Enter the number of words: ";
     cin >> count_word;
@@ -22,11 +23,8 @@ int main()
     {
         cout << "Enter the word: " << endl;
         cin >> words[i];
-
-        int length = 0;
-        while (words[i][length] != '\0' && length < 10) length++;
         
-        if (length > 10)
+        if (strlen(words[i]) > 10)
         {
             cout << "Length of word should be less or equal 10" << endl;
             return 1;
