@@ -1,2 +1,2 @@
 ﻿  Lab3.cpp
-C:\Users\Bruh263\Desktop\CPP_Labs\Lab3\Lab3\Lab3.cpp(12,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Lab3.vcxproj -> C:\Users\Bruh263\Desktop\CPP_Labs\Lab3\x64\Debug\Lab3.exe

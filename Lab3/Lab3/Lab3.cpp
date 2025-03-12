@@ -1,11 +1,33 @@
 ﻿#include <iostream>
-#include <cstring>
 
 using namespace std;
 
+void lesson1()
+{
+    char word1[] = "Hello world", word2[] = "alone", word3[] = "alon", cop[20];
+
+    cout << strlen(word1) << endl;
+
+    strcpy(cop, word1);
+    cout << cop << endl;
+
+    int result = strcmp(word2, word3);
+    cout << result << endl;
+    if (result == 0)
+    {
+        cout << "Слова одинаковые" << endl;
+    }
+    else
+    {
+        cout << "Слова неодинаковые" << endl;
+    }
+}
+
 int main()
 {   
-    //setlocale(LC_ALL, "RU");
+    setlocale(LC_ALL, "RU");
+
+    lesson1();
 
     int count_word;
     char words[20][11];

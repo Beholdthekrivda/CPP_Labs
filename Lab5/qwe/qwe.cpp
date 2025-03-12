@@ -6,9 +6,63 @@
 
 using namespace std;
 
+void lesson1()
+{
+	cout << "Введите слово, а затем число" << endl;
+	int num; char word[10];
+	scanf("%s", word);
+	scanf("%d", &num);
+
+	printf("%s", word);
+	printf("%d", num);
+
+	FILE* file = fopen("data.txt", "w");
+	fprintf(file, "%s %d", word, num);
+	fclose(file);
+
+	file = fopen("data.txt", "r");
+
+	int num1; char word1[10];
+	fscanf(file, "%s %d", word1, &num1);
+	cout << endl;
+
+	if (feof(file))
+	{
+		cout << "Достигнут конец файла" << endl;
+	}
+
+	fclose(file);
+
+	{
+		char arr[] = { 10, 20, 30, 40, 50 };
+		ofstream file("data.bin", ios::binary);
+		if (file) 
+		{
+			file.write(arr, sizeof(arr));
+		}
+	}
+
+	{
+		char arr[5];
+		ifstream file("data.bin", ios::binary);
+		if (file) 
+		{
+			file.read(arr, sizeof(arr));
+			for (int i = 0; i < size(arr); i++)
+			{
+				cout << static_cast<int>(arr[i]) << " ";
+			}
+		}
+	}
+
+	cout << endl;
+}
+
 void main()
 {
 	setlocale(LC_ALL, "RU");
+
+	lesson1();
 
 	ifstream file("test.txt");
 	ofstream file_important("result_important.txt");
@@ -20,7 +74,7 @@ void main()
 		int pos = 0, found;
 		vector<string> words{};
 
-		while ((found = line.find(' ', pos)) != std::string::npos) {
+		while ((found = line.find(' ', pos)) != string::npos) {
 			words.push_back(line.substr(pos, found - pos));
 			pos = found + 1;
 		}
@@ -72,17 +126,6 @@ void main()
 			return;
 		}
 
-		int max = prefix[0].size();
-		string max_word;
-		for (int i = 0; i < prefix.size(); i++)
-		{
-			if (max <= prefix[i].size())
-			{
-				max = prefix[i].size();
-				max_word = prefix[i];
-			}
-		}
-
 		cout << endl;
 		int max_important = 0; string important_word; string longest_word;
 		for (auto it = prefix_count.begin(); it != prefix_count.end(); it++)
@@ -103,7 +146,7 @@ void main()
 
 		for (int i = 0; i < words.size(); i++)
 		{
-			if (words[i].size() > longest_word.size() && words[i].compare(0, longest_word.size(), longest_word) == 0)
+			if (words[i].size() >= longest_word.size() && words[i].compare(0, longest_word.size(), longest_word) == 0)
 			{
 				file_longest << words[i] << " ";
 			}
