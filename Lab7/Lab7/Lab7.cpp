@@ -1,7 +1,5 @@
 ﻿#include <iostream>
 #include <fstream>
-#include <cmath>
-#include <algorithm>
 using namespace std;
 
 double eps = 0.000001;
