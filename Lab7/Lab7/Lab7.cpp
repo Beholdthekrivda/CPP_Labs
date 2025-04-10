@@ -4,8 +4,15 @@ using namespace std;
 
 double eps = 0.000001;
 
-void general_solution(int n, int m, double** matrix, double*& X, int*perm)
+void general_solution(int n, int m, double** matrix, double*& X)
 {
+    bool* is_lead = new bool[n];
+
+    for (int i = 0; i < n; i++)
+    {
+        is_lead[i] = false;
+    }
+
     // Находим ранк матрицы
     int rank = 0;
     for (int i = min(n - 1, m - 1); i >= 0; i--)
@@ -13,22 +20,39 @@ void general_solution(int n, int m, double** matrix, double*& X, int*perm)
         int count = 0;
         for (int j = 0; j < n; j++)
         {
-            if (matrix[i][j] != 0) count++;
+            if (matrix[i][j] > eps) count++;
         }
 
         if (count != 0) rank++;
     }
 
+    int* lead_cols = new int[rank];
+    int* free_vars = new int[n - rank];
+
     // Находим свободные переменные
     for (int i = min(n - 1, m - 1); i >= 0; i--)
     {
-        int find = n - 1;
+        int find = n - 1, k = 0;
         for (int j = n - rank; j > 0; j--)
         {
-            if (perm[find] == false && matrix[i][find] != 0) perm[find] = true;
-            find--;
+            if (is_lead[find] == false && matrix[i][find] > eps) free_vars[k] = find;
+            find--; k++;
         }
     }
+
+    // Находим базисные переменные
+    for (int i = 0; i < rank; i++)
+    {
+        lead_cols[i] = i;
+        cout << lead_cols[i] << " ";
+    }
+    cout << endl;
+
+    for (int j = n - rank - 1; j >= 0; j--)
+    {
+        cout << free_vars[j] << " ";
+    }
+    cout << endl;
 }
 
 int triangulation_for_general_solution(int n, int m, double**& matrix, int*& perm)
@@ -126,7 +150,7 @@ void lesson3()
 
         if (result)
         {
-            general_solution(n, m, matrix, x, perm);
+            general_solution(n, m, matrix, x);
 
             for (int i = 0; i < m; i++)
             {
