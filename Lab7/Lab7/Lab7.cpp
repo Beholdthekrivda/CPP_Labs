@@ -4,103 +4,100 @@ using namespace std;
 
 double eps = 0.000001;
 
-void general_solution(int n, int m, double** matrix, double*& X)
+int general_solution(int n, int m, double** A, double*& X)
 {
-    bool* is_lead = new bool[n];
+    int* L = new int[n];
+    for (int i = 0; i < n; i++) L[i] = i;
 
-    for (int i = 0; i < n; i++)
-    {
-        is_lead[i] = false;
-    }
+    int i = 0, r;
+    if (n < m) r = n;
+    else r = m;
 
-    // Находим ранк матрицы
-    int rank = 0;
-    for (int i = min(n - 1, m - 1); i >= 0; i--)
+    while (i < r)
     {
-        int count = 0;
-        for (int j = 0; j < n; j++)
+        int v = i, u = i;
+        for (int j = i; j < m; j++)
         {
-            if (matrix[i][j] > eps) count++;
-        }
-
-        if (count != 0) rank++;
-    }
-
-    int* lead_cols = new int[rank];
-    int* free_vars = new int[n - rank];
-
-    // Находим свободные переменные
-    for (int i = min(n - 1, m - 1); i >= 0; i--)
-    {
-        int find = n - 1, k = 0;
-        for (int j = n - rank; j > 0; j--)
-        {
-            if (is_lead[find] == false && matrix[i][find] > eps) free_vars[k] = find;
-            find--; k++;
-        }
-    }
-
-    // Находим базисные переменные
-    for (int i = 0; i < rank; i++)
-    {
-        lead_cols[i] = i;
-        cout << lead_cols[i] << " ";
-    }
-    cout << endl;
-
-    for (int j = n - rank - 1; j >= 0; j--)
-    {
-        cout << free_vars[j] << " ";
-    }
-    cout << endl;
-}
-
-int triangulation_for_general_solution(int n, int m, double**& matrix, int*& perm)
-{
-    int swapcount = 0;
-
-    if (m == 0 || n == 0) return swapcount;
-
-    for (int i = 0; i < min(m, n) - 1; i++) // метод поиска макс эл-та на всей площади матрицы, кроме последнего столбца
-    {
-        double maxVal = fabs(matrix[i][i]); // как в случае с нахождением маскимального эл-та берем за макс самое первое число
-        int maxpos = i, count = 0;
-        for (int k = i + 1; k < m; k++)
-        {
-            if (maxVal == 0) count++;
-
-            double el = fabs(matrix[k][i]);
-            if (el > maxVal)
+            for (int k = i; k < n; k++)
             {
-                maxVal = el;
-                maxpos = k;
+                if (abs(A[j][k]) > abs(A[v][u]))
+                {
+                    v = j;
+                    u = k;
+                }
             }
         }
 
-        if (count == m - 1)
+        if (abs(A[v][u]) < eps) r = i;
+        else
         {
-            continue;
-        }
-
-        if (maxpos != i)
-        {
-            double* temp = matrix[i];
-            matrix[i] = matrix[maxpos];
-            matrix[maxpos] = temp;
-            swapcount++;
-        }
-
-        for (int j = i + 1; j < m; j++)
-        {
-            double mul = matrix[j][i] / matrix[i][i];
-            for (int k = i; k < n + 1; k++)
+            if (v != i)
             {
-                matrix[j][k] -= matrix[i][k] * mul;
+                double* z = A[i];
+                A[i] = A[v];
+                A[v] = z;
             }
+
+            if (u != i)
+            {
+                for (int k = 0; k < m; k++)
+                {
+                    double z = A[k][i];
+                    A[k][i] = A[k][u];
+                    A[k][u] = z;
+                }
+
+                int p = L[i];
+                L[i] = L[u];
+                L[u] = p;
+            }
+
+            double c = A[i][i];
+            for (int j = i; j <= n; j++) A[i][j] /= c;
+
+            for (int k = 0; k < m; k++)
+            {
+                if (k != i)
+                {
+                    c = A[k][i];
+                    for (int j = i; j <= n; j++) A[k][j] -= c * A[i][j];
+                }
+            }
+
+            i++;
         }
     }
 
-    return swapcount;
+    i = r;
+    // проверяем на наличие строки вида 0 0 0 0 ... 0 | b, b != 0
+    while (i < m && abs(A[i][n]) < eps) i++;
+    if (i < m)
+    {
+        return 0;
+    }
+    else if (r == n)
+    {
+        for (int j = 0; j < n; j++) X[L[j]] = A[j][n];
+        return 1;
+    }
+    else
+    {
+        for (int k = r; k < n; k++)
+        {
+            cout << "Введите значение для x" << L[k] + 1 << ": ";
+            cin >> X[L[k]];
+        }
+        cout << endl;
+
+        // 2) Обратная подстановка для ведущих переменных
+        for (int j = 0; j < r; j++)
+        {
+            X[L[j]] = A[j][n];
+            for (int k = r; k < n; k++) X[L[j]] -= A[j][k] * X[L[k]];
+        }
+    }
+
+    return 1;
 }
 
 void lesson3()
@@ -146,21 +143,10 @@ void lesson3()
             perm[i] = i;
         }
 
-        int result = triangulation_for_general_solution(n, m, matrix, perm);
+        int result = general_solution(n, m, matrix, x);
 
         if (result)
         {
-            general_solution(n, m, matrix, x);
-
-            for (int i = 0; i < m; i++)
-            {
-                for (int j = 0; j < n + 1; j++)
-                {
-                    cout << matrix[i][j] << " ";
-                }
-                cout << endl;
-            }
-
             for (int i = 0; i < n; i++)
             {
                 cout << "x" << i + 1 << "=" << x[i] << " ";
@@ -353,7 +339,7 @@ void lesson1_2()
 int main()
 {
     setlocale(LC_ALL, "RU");
-
+    //lesson1_2();
     lesson3();
     return 0;
 }
