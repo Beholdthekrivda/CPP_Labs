@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <filesystem>
 using namespace std;
 
 void matrix(int n, int m, const int* v1, const int* v2, const string& matrix_file) 
@@ -163,9 +164,9 @@ int main()
         int* L = new int[n]();
 
         // имена файлов
-        string matrix_file = "matrix_" + to_string(graph_num) + ".txt";
-        string graph_file = "graph_" + to_string(graph_num) + ".txt";
-        string paths_file = "paths_" + to_string(graph_num) + ".txt";
+        string matrix_file = "C:/Users/Bruh263/Desktop/CPP_Labs/Lab8/Lab8/matrices/matrix_" + to_string(graph_num) + ".txt";
+        string graph_file = "C:/Users/Bruh263/Desktop/CPP_Labs/Lab8/Lab8/graphs/graph_" + to_string(graph_num) + ".txt";
+        string paths_file = "C:/Users/Bruh263/Desktop/CPP_Labs/Lab8/Lab8/paths/paths_" + to_string(graph_num) + ".txt";
 
         matrix(n, m, v1, v2, matrix_file);
         graph(matrix_file, graph_file, L);
