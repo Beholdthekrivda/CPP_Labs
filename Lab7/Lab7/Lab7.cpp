@@ -339,7 +339,7 @@ void lesson1_2()
 int main()
 {
     setlocale(LC_ALL, "RU");
-    //lesson1_2();
+    lesson1_2();
     lesson3();
     return 0;
 }

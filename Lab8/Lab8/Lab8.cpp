@@ -167,6 +167,123 @@ void lesson1()
     file.close();
 }
 
+int deep(int v, int n, int** M, int* R, int compId) 
+{
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (M[i][j] == 0) count++;
+        }
+    }
+
+    if (count == (n * n))
+    {
+        cout << "Семей: " << n << endl;
+        for (int i = 0; i < n; i++)
+        {
+            cout << "Семья " << i + 1 << ": " << i << endl;
+        }
+        return 0;
+    }
+
+    for (int u = 0; u < n; u++) 
+    {
+        if (M[v][u] && R[u] == 0) 
+        {
+            R[u] = compId;
+            deep(u, n, M, R, compId);
+        }
+    }
+
+    return 1;
+}
+
+void lesson2()
+{
+    ifstream file("gen.txt");
+
+    int a, b, n = 13;
+
+    int** M = new int* [n];
+    for (int i = 0; i < n; i++) M[i] = new int[n]();
+
+    while (file >> a >> b)
+    {
+        if (a == -1 && b == -1)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    cout << M[i][j] << " ";
+                }
+                cout << endl;
+            }
+            cout << endl;
+
+            int* R = new int[n]();
+
+            int compCount = 0, result;
+            for (int i = 0; i < n; i++) 
+            {
+                if (R[i] == 0) 
+                {
+                    ++compCount;
+                    R[i] = compCount;
+                    result = deep(i, n, M, R, compCount);
+                    if (!result) break;
+                }
+            }
+
+            if (result)
+            {
+                int **members = new int*[n];     // members[c][k] — k-ая вершина в компоненте c
+                for (int i = 0; i < n; i++) members[i] = new int[n]();
+                int *sizes = new int[n]();   // sizes[c] = сколько уже добавлено в members[c]
+
+                // 2) Раскладываем вершины по компонентам
+                for (int i = 0; i < n; i++)
+                {
+                    int c = R[i];           // c от 1 до compCount
+                    members[c][sizes[c]++] = i;
+                }
+
+                cout << "Семей: " << compCount << endl;
+                for (int c = 1; c <= compCount; c++)
+                {
+                    cout << "Семья " << c << ": ";
+                    for (int k = 0; k < sizes[c]; k++)
+                    {
+                        cout << members[c][k] << ' ';
+                    }
+                    cout << endl;
+                }
+
+                cout << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    R[i] = 0;
+                    for (int j = 0; j < n; j++)
+                    {
+                        M[i][j] = 0;
+                    }
+                }
+                continue;
+            }    
+        }
+        else
+        {
+            M[a][b] = 1; M[b][a] = 1;
+        }
+    }
+
+    for (int i = 0; i < n; i++) delete M[i];
+    delete[] M;
+    file.close();
+}
+
 void hamilton(int k, int n, int** M, int* P, int* R, int& count)
 {
     int i = P[k - 1];
@@ -236,12 +353,85 @@ void lesson3()
 
 }
 
+void euler(int** M, int n)
+{
+    int q = 0;
+    for (int i = 0; i < n && (q < 3); i++)
+    {
+        int s = 0;
+        for (int j = 0; j < n; j++)
+        {
+            if (M[i][j]) s++;
+        }
+        if (s & 1)
+        {
+            q++;
+        }
+    }
+
+    if (q == 0) 
+    {
+        cout << "Можно нарисовать эту фигуру, начиная и заканчивая рисование в одной и той же точке" << endl;
+    }
+    else if (q == 2) 
+    {
+        cout << "Можно нарисовать эту фигуру, начиная и заканчивая рисование в различных точках" << endl;
+    }
+    else 
+    {
+        cout << "Не существует" << endl;
+    }
+
+}
+
+void lesson5()
+{
+    ifstream file("d_g.txt");
+
+    int n, m;
+    while (file >> n >> m)
+    {
+        int** M = new int* [n];
+        for (int i = 0; i < n; i++) M[i] = new int[n]();
+
+        int v, u;
+        for (int i = 0; i < m; i++)
+        {
+            file >> v >> u;
+            M[v - 1][u - 1] = 1;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                cout << M[i][j] << " ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+
+        euler(M, n);
+
+        cout << endl;
+    }
+}
+
 int main() 
 {
     setlocale(LC_ALL, "RU");
 
+    cout << "Упражнение 1" << endl;
+    lesson1();
+    cout << endl;
+    cout << "Упражнение 2" << endl;
+    lesson2();
+    cout << endl;
     cout << "Упражнение 3" << endl;
     lesson3();
+    cout << endl;
+    cout << "Упражнение 5" << endl;
+    lesson5();
 
     return 0;
 }
