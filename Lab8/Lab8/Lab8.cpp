@@ -200,6 +200,40 @@ int deep(int v, int n, int** M, int* R, int compId)
     return 1;
 }
 
+int deep_D(int v, int n, int** M, int* R, int*L, int compId)
+{
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (M[i][j] == 0) count++;
+        }
+    }
+
+    if (count == (n * n))
+    {
+        cout << "Семей: " << n << endl;
+        for (int i = 0; i < n; i++)
+        {
+            cout << "Семья " << i + 1 << ": " << i << endl;
+        }
+        return 0;
+    }
+
+    for (int u = 0; u < L[v]; u++)
+    {
+        int q = M[v][u];
+        if (R[q] == 0)
+        {
+            R[q] = compId;
+            deep_D(q, n, M, R, L, compId);
+        }
+    }
+
+    return 1;
+}
+
 void lesson2()
 {
     ifstream file("gen.txt");
@@ -225,6 +259,51 @@ void lesson2()
 
             int* R = new int[n]();
 
+            int* L = new int[n]();
+            for (int i = 0; i < n; ++i)
+            {
+                for (int j = 0; j < n; ++j)
+                {
+                    if (M[i][j]) L[i]++; // считаем кол-во смежных вершин для i-ой вершины
+                }
+            }
+
+            // Выделяем подмассивы neighbours[i][0..L[i]-1]
+            int** neighbours = new int* [n];
+            for (int i = 0; i < n; ++i) neighbours[i] = new int[L[i]];
+
+            // Заполняем массив
+            int* pos = new int[n]();
+            for (int i = 0; i < n; ++i)
+            {
+                for (int j = 0; j < n; ++j)
+                {
+                    if (M[i][j])
+                    {
+                        neighbours[i][pos[i]++] = j;
+                    }
+                }
+            }
+
+            int count = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (M[i][j] == 0) count++;
+                }
+            }
+
+            if (count == (n * n))
+            {
+                cout << "Семей: " << n << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    cout << "Семья " << i + 1 << ": " << i << endl;
+                }
+                continue;
+            }
+
             int compCount = 0, result;
             for (int i = 0; i < n; i++) 
             {
@@ -232,21 +311,20 @@ void lesson2()
                 {
                     ++compCount;
                     R[i] = compCount;
-                    result = deep(i, n, M, R, compCount);
+                    result = deep_D(i, n, neighbours, R, L, compCount);
                     if (!result) break;
                 }
             }
 
             if (result)
             {
-                int **members = new int*[n];     // members[c][k] — k-ая вершина в компоненте c
+                int **members = new int*[n];
                 for (int i = 0; i < n; i++) members[i] = new int[n]();
-                int *sizes = new int[n]();   // sizes[c] = сколько уже добавлено в members[c]
+                int *sizes = new int[n]();
 
-                // 2) Раскладываем вершины по компонентам
                 for (int i = 0; i < n; i++)
                 {
-                    int c = R[i];           // c от 1 до compCount
+                    int c = R[i];          
                     members[c][sizes[c]++] = i;
                 }
 
@@ -309,6 +387,32 @@ void hamilton(int k, int n, int** M, int* P, int* R, int& count)
     }
 }
 
+void hamilton_D(int k, int n, int** M, int* P, int* R, int* L, int& count)
+{
+    int i = P[k - 1];
+
+    if (i == n - 1)
+    {
+        for (int i = 0; i < k; i++)
+            cout << P[i] + 1 << (i + 1 < k ? " -> " : "");
+        count++;
+        cout << endl;
+        return;
+    }
+
+    for (int j = 0; j < L[i]; j++)
+    {
+        int q = M[i][j];
+        if (R[q] == 0) 
+        {
+            P[k] = q;
+            R[q] = 1;
+            hamilton_D(k + 1, n, M, P, R, L, count);
+            R[q] = 0;
+        }
+    }
+}
+
 void lesson3()
 {
     ifstream file("directed_graph.txt");
@@ -336,12 +440,38 @@ void lesson3()
         }
         cout << endl;
 
+        int* L = new int[n]();
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (M[i][j]) L[i]++; // считаем кол-во смежных вершин для i-ой вершины
+            }
+        }
+
+        // Выделяем подмассивы neighbours[i][0..L[i]-1]
+        int** neighbours = new int* [n];
+        for (int i = 0; i < n; ++i) neighbours[i] = new int[L[i]];
+
+        // Заполняем массив
+        int* pos = new int[n]();
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (M[i][j])
+                {
+                    neighbours[i][pos[i]++] = j;
+                }
+            }
+        }
+
         int* R = new int[n]();
         int* P = new int[n]();
         P[0] = 0;
         R[0] = 1;
         int count = 0;
-        hamilton(1, n, M, P, R, count);
+        hamilton_D(1, n, neighbours, P, R, L, count);
 
         cout << "Количество путей: " << count << endl;
 
@@ -381,7 +511,31 @@ void euler(int** M, int n)
     {
         cout << "Не существует" << endl;
     }
+}
 
+void euler_D(int** M, int*L, int n)
+{
+    int q = 0;
+    for (int i = 0; i < n && (q < 3); i++)
+    {
+        if (L[i] & 1)
+        {
+            q++;
+        }
+    }
+
+    if (q == 0)
+    {
+        cout << "Можно нарисовать эту фигуру, начиная и заканчивая рисование в одной и той же точке" << endl;
+    }
+    else if (q == 2)
+    {
+        cout << "Можно нарисовать эту фигуру, начиная и заканчивая рисование в различных точках" << endl;
+    }
+    else
+    {
+        cout << "Не существует" << endl;
+    }
 }
 
 void lesson5()
@@ -411,7 +565,33 @@ void lesson5()
         }
         cout << endl;
 
-        euler(M, n);
+        int* L = new int[n]();
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (M[i][j]) L[i]++; // считаем кол-во смежных вершин для i-ой вершины
+            }
+        }
+
+        // Выделяем подмассивы neighbours[i][0..L[i]-1]
+        int** neighbours = new int* [n];
+        for (int i = 0; i < n; ++i) neighbours[i] = new int[L[i]];
+
+        // Заполняем массив
+        int* pos = new int[n]();
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (M[i][j])
+                {
+                    neighbours[i][pos[i]++] = j;
+                }
+            }
+        }
+
+        euler_D(neighbours, L, n);
 
         cout << endl;
     }
