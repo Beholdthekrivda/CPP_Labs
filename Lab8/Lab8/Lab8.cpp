@@ -202,25 +202,6 @@ int deep(int v, int n, int** M, int* R, int compId)
 
 int deep_D(int v, int n, int** M, int* R, int*L, int compId)
 {
-    int count = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            if (M[i][j] == 0) count++;
-        }
-    }
-
-    if (count == (n * n))
-    {
-        cout << "Семей: " << n << endl;
-        for (int i = 0; i < n; i++)
-        {
-            cout << "Семья " << i + 1 << ": " << i << endl;
-        }
-        return 0;
-    }
-
     for (int u = 0; u < L[v]; u++)
     {
         int q = M[v][u];
@@ -513,12 +494,12 @@ void euler(int** M, int n)
     }
 }
 
-void euler_D(int** M, int*L, int n)
+void euler_D(int*L, int n)
 {
     int q = 0;
     for (int i = 0; i < n && (q < 3); i++)
     {
-        if (L[i] & 1)
+        if (L[i] % 2 != 0)
         {
             q++;
         }
@@ -575,23 +556,23 @@ void lesson5()
         }
 
         // Выделяем подмассивы neighbours[i][0..L[i]-1]
-        int** neighbours = new int* [n];
-        for (int i = 0; i < n; ++i) neighbours[i] = new int[L[i]];
+        //int** neighbours = new int* [n];
+        //for (int i = 0; i < n; ++i) neighbours[i] = new int[L[i]];
 
-        // Заполняем массив
-        int* pos = new int[n]();
-        for (int i = 0; i < n; ++i)
-        {
-            for (int j = 0; j < n; ++j)
-            {
-                if (M[i][j])
-                {
-                    neighbours[i][pos[i]++] = j;
-                }
-            }
-        }
+        //// Заполняем массив
+        //int* pos = new int[n]();
+        //for (int i = 0; i < n; ++i)
+        //{
+        //    for (int j = 0; j < n; ++j)
+        //    {
+        //        if (M[i][j])
+        //        {
+        //            neighbours[i][pos[i]++] = j;
+        //        }
+        //    }
+        //}
 
-        euler_D(neighbours, L, n);
+        euler_D(L, n);
 
         cout << endl;
     }
@@ -601,9 +582,9 @@ int main()
 {
     setlocale(LC_ALL, "RU");
 
-    cout << "Упражнение 1" << endl;
+    /*cout << "Упражнение 1" << endl;
     lesson1();
-    cout << endl;
+    cout << endl;*/
     cout << "Упражнение 2" << endl;
     lesson2();
     cout << endl;

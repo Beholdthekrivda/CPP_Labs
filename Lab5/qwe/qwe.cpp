@@ -62,7 +62,7 @@ void main()
 {
 	setlocale(LC_ALL, "RU");
 
-	lesson1();
+	//lesson1();
 
 	ifstream file("test.txt");
 	ofstream file_important("result_important.txt");

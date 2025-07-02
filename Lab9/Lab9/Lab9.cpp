@@ -16,14 +16,14 @@ void printBinary(char n)
 unsigned char rotl8(unsigned char n, int pos) 
 {
     if (pos < 0) pos = -pos;
-    pos %= 8; 
-    return (n << pos) | (n >> (8 - pos));
+    pos %= 8; // приводим к диапазону 0-7
+    return (n << pos) | (n >> (8 - pos)); 
 }
 
 unsigned char rotr8(unsigned char n, int pos) 
 {
     if (pos < 0) pos = -pos;
-    pos %= 8;
+    pos %= 8; // приводим к диапазону 0-7
     return (n >> pos) | (n << (8 - pos));
 }
 
@@ -81,4 +81,6 @@ int main()
         decryption(i, shift);
         out1 << i;
     }
+
+    return 0;
 }
